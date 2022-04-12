@@ -7,7 +7,7 @@ import (
 )
 
 //creates a request for a rest api
-func newRequest(endpoint string, token_key string, token_value string) (*http.Request, error) {
+func NewRequest(endpoint string, token_key string, token_value string) (*http.Request, error) {
 	req, err := http.NewRequest(http.MethodGet, fmt.Sprintf("https://%s", endpoint), nil)
 	req.Header.Add(token_key, token_value)
 	req.Header.Add("accept", "application/json")
