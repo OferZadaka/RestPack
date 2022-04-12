@@ -1,4 +1,4 @@
-package restPack
+package RestPack
 
 import (
 	"fmt"
