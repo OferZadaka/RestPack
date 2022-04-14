@@ -18,13 +18,14 @@ func NewRequest(endpoint string, token_key string, token_value string) (*http.Re
 }
 
 type Outlet struct {
-	Ip     string
-	Outlet string
+	Ip           string
+	Outlet       string
+	Manufacturer string
 }
 
 //creates a new outlet struct
-func newOutlet(outlet string, ip string) Outlet {
-	o := Outlet{Outlet: outlet, Ip: ip}
+func newOutlet(outlet string, ip string, manufacturer string) Outlet {
+	o := Outlet{Outlet: outlet, Ip: ip, Manufacturer: manufacturer}
 	return o
 }
 
@@ -44,6 +45,7 @@ func GetOutlet(response []byte, value string) []Outlet {
 	var ip string
 	var ip_leg string
 	var outlet_leg string
+	var manufacturer string
 	var outlet_s Outlet
 	outlet_slice := make([]Outlet, 0)
 
@@ -57,25 +59,15 @@ func GetOutlet(response []byte, value string) []Outlet {
 			ip_leg = ip
 			ip = strings.Split(v, ":")[1]
 		}
+		if strings.Contains(v, "manufacturer") {
+			manufacturer = strings.Split(v, ":")[1]
+		}
 		if outlet != "" && ip != "" && ip != ip_leg && outlet != outlet_leg {
 			if !contains(outlet_slice, outlet) {
-				outlet_s = newOutlet(outlet, ip)
+				outlet_s = newOutlet(outlet, ip, manufacturer)
 				outlet_slice = append(outlet_slice, outlet_s)
 			}
 		}
 	}
 	return outlet_slice
 }
-
-//api_key := "7e5bce0cee12c654ea0c209c50defa49e5e22d4b"
-//response, err := http.Get("https://netbox.habana-labs.com/api/dcim/power-ports/?device=ofer-test-hls2")
-// url := "netbox.habana-labs.com/api/dcim/power-ports/?device=ofer-test-hls2"
-
-// req, _ := newRequest(url, "Authorization", "Token 7e5bce0cee12c654ea0c209c50defa49e5e22d4b")
-// log.Println(req)
-// res, _ := http.DefaultClient.Do(req)
-// responseData, err := ioutil.ReadAll(res.Body)
-// if err != nil {
-// 	log.Fatal(err)
-// }
-// GetOutlet(responseData, "PSU")
