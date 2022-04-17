@@ -76,21 +76,25 @@ func GetManufacturer(response []byte) []string {
 	var model string
 	var area bool
 	var slug_index int = 0
+	manufacturer_slice := make([]string, 0)
 
 	splitted := strings.Split(string(response), ",")
 	for _, v := range splitted {
 		if strings.Contains(v, "manufacturer") {
 			area = true
+			continue
 		}
 		if strings.Contains(v, "slug") && area {
 			manufacturer = strings.Split(v, ":")[1]
 			slug_index = 1
+			continue
 		}
 		if strings.Contains(v, "slug") && area && slug_index == 1 {
 			model = strings.Split(v, ":")[1]
 		}
 		if model != "" && manufacturer != "" {
-			return []string{manufacturer, model}
+			manufacturer_slice = append(manufacturer_slice, manufacturer, model)
+			return manufacturer_slice
 		}
 	}
 	return []string{"", ""}
