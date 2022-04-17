@@ -84,10 +84,11 @@ func GetManufacturer(response []byte) []string {
 			area = true
 			continue
 		}
-		if strings.Contains(v, "slug") && area {
+		if strings.Contains(v, "slug") && area && slug_index == 0 {
 			manufacturer = strings.Split(v, ":")[1]
 			slug_index = 1
 			continue
+
 		}
 		if strings.Contains(v, "slug") && area && slug_index == 1 {
 			model = strings.Split(v, ":")[1]
@@ -99,3 +100,37 @@ func GetManufacturer(response []byte) []string {
 	}
 	return []string{"", ""}
 }
+
+//////////////////////////////////////////////////////////////
+// func getRequest(url string, name string) []byte {
+// 	url = url + name
+// 	token := "Token 7e5bce0cee12c654ea0c209c50defa49e5e22d4b"
+
+// 	req, _ := NewRequest(url, "Authorization", token)
+// 	res, _ := http.DefaultClient.Do(req)
+
+// 	responseData, err := ioutil.ReadAll(res.Body)
+// 	if err != nil {
+// 		log.Fatal(err)
+// 	}
+// 	return responseData
+// }
+
+// func appendManufacturerDetails(outlet []Outlet) []Outlet {
+// 	for _, out := range outlet {
+// 		out.Ip = strings.Replace(out.Ip, "\"", "", -1)
+// 		manufacturerDetails := getRequest("netbox.habana-labs.com/api/dcim/devices/?name=", out.Ip)
+// 		manufacturer_slice := GetManufacturer(manufacturerDetails)
+// 		out.Manufacturer = manufacturer_slice[0]
+// 		out.Model = manufacturer_slice[1]
+// 	}
+// 	return outlet
+// }
+
+// func main() {
+// 	name := "ofer-test-hls2"
+// 	pdu_details := getRequest("netbox.habana-labs.com/api/dcim/power-ports/?device=", name)
+// 	pdu_slice := GetOutlet(pdu_details)
+// 	pdu_slice = appendManufacturerDetails(pdu_slice)
+
+// }
