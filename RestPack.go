@@ -72,7 +72,7 @@ func GetOutlet(response []byte, value string) []Outlet {
 	return outlet_slice
 }
 
-func getManufacturer(response []byte) []string {
+func GetManufacturer(response []byte) []string {
 	var manufacturer string
 	var model string
 	var area bool
