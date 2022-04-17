@@ -25,8 +25,8 @@ type Outlet struct {
 }
 
 //creates a new outlet struct
-func newOutlet(outlet string, ip string, manufacturer string) Outlet {
-	o := Outlet{Outlet: outlet, Ip: ip, Manufacturer: manufacturer}
+func newOutlet(outlet string, ip string, manufacturer string, model string) Outlet {
+	o := Outlet{Outlet: outlet, Ip: ip, Manufacturer: manufacturer, Model: model}
 	return o
 }
 
@@ -41,16 +41,15 @@ func contains(o []Outlet, e string) bool {
 }
 
 //gets the outlet number and pdu ip from the rest api
-func GetOutlet(response []byte, manufacturer_response []byte, value string) []Outlet {
+func GetOutlet(response []byte, value string) []Outlet {
 	var outlet string
 	var ip string
 	var ip_leg string
 	var outlet_leg string
-	var manufacturer string
 	var outlet_s Outlet
 
 	outlet_slice := make([]Outlet, 0)
-	manufacturer = getManufacturer(manufacturer_response)
+	//connects to the netbox api and gets the PDU details
 	splitted := strings.Split(string(response), ",")
 	for _, v := range splitted {
 		if strings.Contains(v, "PO") {
@@ -64,7 +63,8 @@ func GetOutlet(response []byte, manufacturer_response []byte, value string) []Ou
 
 		if outlet != "" && ip != "" && ip != ip_leg && outlet != outlet_leg {
 			if !contains(outlet_slice, outlet) {
-				outlet_s = newOutlet(outlet, ip, manufacturer)
+				//manufacturer = getManufacturer(manufacturer_response)
+				outlet_s = newOutlet(outlet, ip, "", "")
 				outlet_slice = append(outlet_slice, outlet_s)
 			}
 		}
@@ -89,9 +89,10 @@ func getManufacturer(response []byte) []string {
 		}
 		if strings.Contains(v, "slug") && area && slug_index == 1 {
 			model = strings.Split(v, ":")[1]
-			break
 		}
-		return []string{manufacturer, model}
+		if model != "" && manufacturer != "" {
+			return []string{manufacturer, model}
+		}
 	}
 	return []string{"", ""}
 }
