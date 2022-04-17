@@ -21,6 +21,7 @@ type Outlet struct {
 	Ip           string
 	Outlet       string
 	Manufacturer string
+	Model        string
 }
 
 //creates a new outlet struct
@@ -40,15 +41,16 @@ func contains(o []Outlet, e string) bool {
 }
 
 //gets the outlet number and pdu ip from the rest api
-func GetOutlet(response []byte, value string) []Outlet {
+func GetOutlet(response []byte, manufacturer_response []byte, value string) []Outlet {
 	var outlet string
 	var ip string
 	var ip_leg string
 	var outlet_leg string
 	var manufacturer string
 	var outlet_s Outlet
-	outlet_slice := make([]Outlet, 0)
 
+	outlet_slice := make([]Outlet, 0)
+	manufacturer = getManufacturer(manufacturer_response)
 	splitted := strings.Split(string(response), ",")
 	for _, v := range splitted {
 		if strings.Contains(v, "PO") {
@@ -59,9 +61,7 @@ func GetOutlet(response []byte, value string) []Outlet {
 			ip_leg = ip
 			ip = strings.Split(v, ":")[1]
 		}
-		if strings.Contains(v, "manufacturer") {
-			manufacturer = strings.Split(v, ":")[1]
-		}
+
 		if outlet != "" && ip != "" && ip != ip_leg && outlet != outlet_leg {
 			if !contains(outlet_slice, outlet) {
 				outlet_s = newOutlet(outlet, ip, manufacturer)
@@ -70,4 +70,28 @@ func GetOutlet(response []byte, value string) []Outlet {
 		}
 	}
 	return outlet_slice
+}
+
+func getManufacturer(response []byte) []string {
+	var manufacturer string
+	var model string
+	var area bool
+	var slug_index int = 0
+
+	splitted := strings.Split(string(response), ",")
+	for _, v := range splitted {
+		if strings.Contains(v, "manufacturer") {
+			area = true
+		}
+		if strings.Contains(v, "slug") && area {
+			manufacturer = strings.Split(v, ":")[1]
+			slug_index = 1
+		}
+		if strings.Contains(v, "slug") && area && slug_index == 1 {
+			model = strings.Split(v, ":")[1]
+			break
+		}
+		return []string{manufacturer, model}
+	}
+	return []string{"", ""}
 }
