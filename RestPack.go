@@ -41,7 +41,7 @@ func contains(o []Outlet, e string) bool {
 }
 
 //gets the outlet number and pdu ip from the rest api
-func GetOutlet(response []byte, value string) []Outlet {
+func GetOutlet(response []byte) []Outlet {
 	var outlet string
 	var ip string
 	var ip_leg string
@@ -63,7 +63,6 @@ func GetOutlet(response []byte, value string) []Outlet {
 
 		if outlet != "" && ip != "" && ip != ip_leg && outlet != outlet_leg {
 			if !contains(outlet_slice, outlet) {
-				//manufacturer = getManufacturer(manufacturer_response)
 				outlet_s = newOutlet(outlet, ip, "", "")
 				outlet_slice = append(outlet_slice, outlet_s)
 			}
