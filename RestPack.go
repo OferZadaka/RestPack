@@ -25,8 +25,12 @@ type Outlet struct {
 }
 
 //creates a new outlet struct
-func newOutlet(outlet string, ip string, manufacturer string, model string) Outlet {
-	o := Outlet{Outlet: outlet, Ip: ip, Manufacturer: manufacturer, Model: model}
+func newOutlet(outlet string, ip string) Outlet {
+
+	o := Outlet{
+		Ip:     ip,
+		Outlet: outlet,
+	}
 	return o
 }
 
@@ -63,7 +67,7 @@ func GetOutlet(response []byte) []Outlet {
 
 		if outlet != "" && ip != "" && ip != ip_leg && outlet != outlet_leg {
 			if !contains(outlet_slice, outlet) {
-				outlet_s = newOutlet(outlet, ip, "", "")
+				outlet_s = newOutlet(outlet, ip)
 				outlet_slice = append(outlet_slice, outlet_s)
 			}
 		}
@@ -114,23 +118,23 @@ func GetManufacturer(response []byte) []string {
 // 		log.Fatal(err)
 // 	}
 // 	return responseData
-// }
+//}
 
-// func appendManufacturerDetails(outlet []Outlet) []Outlet {
-// 	for _, out := range outlet {
+// func appendManufacturerDetails(outlet *[]Outlet) {
+// 	for _, out := range *outlet {
 // 		out.Ip = strings.Replace(out.Ip, "\"", "", -1)
+// 		out.Ip = strings.Replace(out.Ip, "}", "", -1)
 // 		manufacturerDetails := getRequest("netbox.habana-labs.com/api/dcim/devices/?name=", out.Ip)
 // 		manufacturer_slice := GetManufacturer(manufacturerDetails)
 // 		out.Manufacturer = manufacturer_slice[0]
 // 		out.Model = manufacturer_slice[1]
 // 	}
-// 	return outlet
 // }
 
 // func main() {
 // 	name := "ofer-test-hls2"
 // 	pdu_details := getRequest("netbox.habana-labs.com/api/dcim/power-ports/?device=", name)
 // 	pdu_slice := GetOutlet(pdu_details)
-// 	pdu_slice = appendManufacturerDetails(pdu_slice)
+// 	appendManufacturerDetails(&pdu_slice)
 
 // }
