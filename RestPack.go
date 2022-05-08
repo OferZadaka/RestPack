@@ -60,7 +60,7 @@ func GetOutlet(response []byte) []Outlet {
 			outlet_leg = outlet
 			outlet = strings.Split(v, ":")[1]
 		}
-		if strings.Contains(v, "192") {
+		if strings.Contains(v, "10.111") {
 			ip_leg = ip
 			ip = strings.Split(v, ":")[1]
 		}
