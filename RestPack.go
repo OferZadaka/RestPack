@@ -56,7 +56,7 @@ func GetOutlet(response []byte) []Outlet {
 	//connects to the netbox api and gets the PDU details
 	splitted := strings.Split(string(response), ",")
 	for _, v := range splitted {
-		if strings.Contains(v, "PO") {
+		if strings.Contains(v, "OUTLET-") {
 			outlet_leg = outlet
 			outlet = strings.Split(v, ":")[1]
 		}
